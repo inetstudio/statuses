@@ -1,0 +1,25 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateStatusesTables extends Migration
+{
+    public function up()
+    {
+        Schema::create('statuses', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('alias');
+            $table->text('description')->nullable();
+            $table->string('color_class')->default('default');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function down()
+    {
+        Schema::drop('statuses');
+    }
+}

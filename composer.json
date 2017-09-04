@@ -1,0 +1,20 @@
+{
+    "name": "inetstudio/statuses",
+    "description": "Package for statuses",
+    "homepage": "https://github.com/inetstudio/statuses",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "Konstantin Bukin",
+        "email": "bukin@inetstudio.ru"
+      }
+    ],
+    "require": {
+      "inetstudio/admin-panel": "1.4.*"
+    },
+    "autoload": {
+      "psr-4": {
+        "InetStudio\\Statuses\\": "src/"
+      }
+    }
+}
