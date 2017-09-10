@@ -25,31 +25,7 @@ class SetupCommand extends Command
      *
      * @var array
      */
-    protected $calls = [
-        [
-            'description' => 'Publish migrations',
-            'command' => 'vendor:publish',
-            'params' => [
-                '--provider' => 'InetStudio\Statuses\StatusesServiceProvider',
-                '--tag' => 'migrations',
-            ],
-        ],
-        [
-            'description' => 'Migration',
-            'command' => 'migrate',
-            'params' => [],
-        ],
-        [
-            'description' => 'Optimize',
-            'command' => 'optimize',
-            'params' => [],
-        ],
-        [
-            'description' => 'Create draft status',
-            'command' => 'inetstudio:statuses:draft',
-            'params' => [],
-        ],
-    ];
+    protected $calls = [];
 
     /**
      * Execute the console command.
@@ -58,9 +34,49 @@ class SetupCommand extends Command
      */
     public function fire()
     {
+        $this->initCommands();
+
         foreach ($this->calls as $info) {
+            if (! isset($info['command'])) {
+                continue;
+            }
+
             $this->line(PHP_EOL.$info['description']);
             $this->call($info['command'], $info['params']);
         }
+    }
+
+    /**
+     * Инициализация команд.
+     *
+     * @return void
+     */
+    private function initCommands()
+    {
+        $this->calls = [
+            [
+                'description' => 'Publish migrations',
+                'command' => 'vendor:publish',
+                'params' => [
+                    '--provider' => 'InetStudio\Statuses\StatusesServiceProvider',
+                    '--tag' => 'migrations',
+                ],
+            ],
+            [
+                'description' => 'Migration',
+                'command' => 'migrate',
+                'params' => [],
+            ],
+            [
+                'description' => 'Optimize',
+                'command' => 'optimize',
+                'params' => [],
+            ],
+            [
+                'description' => 'Create draft status',
+                'command' => 'inetstudio:statuses:draft',
+                'params' => [],
+            ],
+        ];
     }
 }

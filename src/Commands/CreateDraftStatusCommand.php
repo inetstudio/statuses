@@ -30,13 +30,15 @@ class CreateDraftStatusCommand extends Command
     public function fire()
     {
         if (DB::table('statuses')->where('alias', 'draft')->count() == 0) {
+            $now = Carbon::now()->format('Y-m-d H:m:s');
+
             DB::table('statuses')->insert([
                 [
                     'name' => 'Черновик',
                     'alias' => 'draft',
                     'color_class' => 'warning',
-                    'created_at' => Carbon::now()->format('Y-m-d H:m:s'),
-                    'updated_at' => Carbon::now()->format('Y-m-d H:m:s'),
+                    'created_at' => $now,
+                    'updated_at' => $now,
                 ],
             ]);
         }
