@@ -11,6 +11,10 @@ class StatusesServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'admin.module.statuses');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
+        $this->publishes([
+            __DIR__.'/../config/statuses.php' => config_path('statuses.php'),
+        ], 'config');
+
         if ($this->app->runningInConsole()) {
             if (! class_exists('CreateStatusesTables')) {
                 $timestamp = date('Y_m_d_His', time());

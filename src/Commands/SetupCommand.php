@@ -77,6 +77,14 @@ class SetupCommand extends Command
                 'command' => 'inetstudio:statuses:draft',
                 'params' => [],
             ],
+            [
+                'description' => 'Publish config',
+                'command' => 'vendor:publish',
+                'params' => [
+                    '--provider' => 'InetStudio\Statuses\StatusesServiceProvider',
+                    '--tag' => 'config',
+                ],
+            ],
         ];
     }
 }

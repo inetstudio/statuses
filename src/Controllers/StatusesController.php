@@ -7,6 +7,7 @@ use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
+use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Statuses\Requests\SaveStatusRequest;
 use InetStudio\Statuses\Transformers\StatusTransformer;
 
@@ -17,6 +18,8 @@ use InetStudio\Statuses\Transformers\StatusTransformer;
  */
 class StatusesController extends Controller
 {
+    use DatatablesTrait;
+
     /**
      * Список статусов.
      *
@@ -25,61 +28,9 @@ class StatusesController extends Controller
      */
     public function index(Datatables $dataTable)
     {
-        $table = $dataTable->getHtmlBuilder();
-
-        $table->columns($this->getColumns());
-        $table->ajax($this->getAjaxOptions());
-        $table->parameters($this->getTableParameters());
+        $table = $this->generateTable($dataTable, 'statuses', 'index');
 
         return view('admin.module.statuses::pages.index', compact('table'));
-    }
-
-    /**
-     * Свойства колонок datatables.
-     *
-     * @return array
-     */
-    private function getColumns()
-    {
-        return [
-            ['data' => 'name', 'name' => 'name', 'title' => 'Название'],
-            ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Дата создания'],
-            ['data' => 'updated_at', 'name' => 'updated_at', 'title' => 'Дата обновления'],
-            ['data' => 'actions', 'name' => 'actions', 'title' => 'Действия', 'orderable' => false, 'searchable' => false],
-        ];
-    }
-
-    /**
-     * Свойства ajax datatables.
-     *
-     * @return array
-     */
-    private function getAjaxOptions()
-    {
-        return [
-            'url' => route('back.statuses.data'),
-            'type' => 'POST',
-            'data' => 'function(data) { data._token = $(\'meta[name="csrf-token"]\').attr(\'content\'); }',
-        ];
-    }
-
-    /**
-     * Свойства datatables.
-     *
-     * @return array
-     */
-    private function getTableParameters()
-    {
-        return [
-            'paging' => true,
-            'pagingType' => 'full_numbers',
-            'searching' => true,
-            'info' => false,
-            'searchDelay' => 350,
-            'language' => [
-                'url' => asset('admin/js/plugins/datatables/locales/russian.json'),
-            ],
-        ];
     }
 
     /**
