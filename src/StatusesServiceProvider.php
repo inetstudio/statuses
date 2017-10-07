@@ -37,6 +37,5 @@ class StatusesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
     }
 }
