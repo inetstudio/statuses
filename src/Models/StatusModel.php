@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
- * InetStudio\Statuses\Models\StatusModel
+ * InetStudio\Statuses\Models\StatusModel.
  *
  * @property int $id
  * @property string $name

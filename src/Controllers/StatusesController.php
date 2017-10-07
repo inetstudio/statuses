@@ -80,7 +80,6 @@ class StatusesController extends Controller
     public function edit($id = null)
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
-
             return view('admin.module.statuses::pages.form', [
                 'item' => $item,
             ]);
