@@ -3,7 +3,7 @@
 namespace InetStudio\Statuses\Controllers;
 
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
@@ -23,10 +23,10 @@ class StatusesController extends Controller
     /**
      * Список статусов.
      *
-     * @param Datatables $dataTable
+     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Datatables $dataTable)
+    public function index(DataTables $dataTable)
     {
         $table = $this->generateTable($dataTable, 'statuses', 'index');
 
@@ -42,9 +42,9 @@ class StatusesController extends Controller
     {
         $items = StatusModel::query();
 
-        return Datatables::of($items)
+        return DataTables::of($items)
             ->setTransformer(new StatusTransformer)
-            ->escapeColumns(['actions'])
+            ->rawColumns(['actions'])
             ->make();
     }
 
