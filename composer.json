@@ -10,11 +10,18 @@
       }
     ],
     "require": {
-      "inetstudio/admin-panel": "1.4.*"
+      "inetstudio/admin-panel": "1.5.*"
     },
     "autoload": {
       "psr-4": {
         "InetStudio\\Statuses\\": "src/"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "InetStudio\\Statuses\\StatusesServiceProvider"
+        ]
       }
     }
 }

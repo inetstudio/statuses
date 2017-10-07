@@ -27,7 +27,7 @@ class CreateDraftStatusCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         if (DB::table('statuses')->where('alias', 'draft')->count() == 0) {
             $now = Carbon::now()->format('Y-m-d H:m:s');
