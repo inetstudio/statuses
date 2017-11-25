@@ -7,9 +7,9 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
-use InetStudio\AdminPanel\Traits\DatatablesTrait;
 use InetStudio\Statuses\Requests\SaveStatusRequest;
 use InetStudio\Statuses\Transformers\StatusTransformer;
+use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
  * Контроллер для управления статусами.
