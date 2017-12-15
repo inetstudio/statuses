@@ -1,14 +1,17 @@
 <?php
 
-namespace InetStudio\Statuses\Controllers;
+namespace InetStudio\Statuses\Http\Controllers\Back;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
-use InetStudio\Statuses\Requests\SaveStatusRequest;
 use InetStudio\Statuses\Transformers\StatusTransformer;
+use InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest;
 use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
 
 /**
@@ -26,11 +29,11 @@ class StatusesController extends Controller
      * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(DataTables $dataTable)
+    public function index(DataTables $dataTable): View
     {
         $table = $this->generateTable($dataTable, 'statuses', 'index');
 
-        return view('admin.module.statuses::pages.index', compact('table'));
+        return view('admin.module.statuses::back.pages.index', compact('table'));
     }
 
     /**
@@ -53,9 +56,9 @@ class StatusesController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
-        return view('admin.module.statuses::pages.form', [
+        return view('admin.module.statuses::back.pages.form', [
             'item' => new StatusModel(),
         ]);
     }
@@ -66,7 +69,7 @@ class StatusesController extends Controller
      * @param SaveStatusRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveStatusRequest $request)
+    public function store(SaveStatusRequest $request): RedirectResponse
     {
         return $this->save($request);
     }
@@ -77,10 +80,10 @@ class StatusesController extends Controller
      * @param null $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit($id = null)
+    public function edit($id = null): View
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
-            return view('admin.module.statuses::pages.form', [
+            return view('admin.module.statuses::back.pages.form', [
                 'item' => $item,
             ]);
         } else {
@@ -95,7 +98,7 @@ class StatusesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveStatusRequest $request, $id = null)
+    public function update(SaveStatusRequest $request, $id = null): RedirectResponse
     {
         return $this->save($request, $id);
     }
@@ -107,7 +110,7 @@ class StatusesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function save($request, $id = null)
+    private function save($request, $id = null): RedirectResponse
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
             $action = 'отредактирован';
@@ -124,7 +127,9 @@ class StatusesController extends Controller
 
         Session::flash('success', 'Статус «'.$item->name.'» успешно '.$action);
 
-        return redirect()->to(route('back.statuses.edit', $item->fresh()->id));
+        return response()->redirectToRoute('back.statuses.edit', [
+            $item->fresh()->id
+        ]);
     }
 
     /**
@@ -133,7 +138,7 @@ class StatusesController extends Controller
      * @param null $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id = null)
+    public function destroy($id = null): JsonResponse
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
             $item->delete();
@@ -154,7 +159,7 @@ class StatusesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getSuggestions(Request $request)
+    public function getSuggestions(Request $request): JsonResponse
     {
         $search = $request->get('q');
         $data = [];

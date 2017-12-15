@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Statuses\Commands;
+namespace InetStudio\Statuses\Console\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -9,25 +9,25 @@ use Illuminate\Support\Facades\DB;
 class CreateDraftStatusCommand extends Command
 {
     /**
-     * The console command name.
+     * Имя команды.
      *
      * @var string
      */
     protected $name = 'inetstudio:statuses:draft';
 
     /**
-     * The console command description.
+     * Описание команды.
      *
      * @var string
      */
     protected $description = 'Create draft status';
 
     /**
-     * Execute the console command.
+     * Запуск команды.
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         if (DB::table('statuses')->where('alias', 'draft')->count() == 0) {
             $now = Carbon::now()->format('Y-m-d H:m:s');

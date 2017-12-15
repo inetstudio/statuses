@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['namespace' => 'InetStudio\Statuses\Controllers'], function () {
+Route::group(['namespace' => 'InetStudio\Statuses\Http\Controllers\Back'], function () {
     Route::group(['middleware' => 'web', 'prefix' => 'back'], function () {
         Route::group(['middleware' => 'back.auth'], function () {
             Route::post('statuses/suggestions', 'StatusesController@getSuggestions')->name('back.statuses.getSuggestions');
