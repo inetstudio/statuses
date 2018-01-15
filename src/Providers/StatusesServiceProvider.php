@@ -1,6 +1,6 @@
 <?php
 
-namespace InetStudio\Statuses;
+namespace InetStudio\Statuses\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use InetStudio\Statuses\Console\Commands\SetupCommand;
