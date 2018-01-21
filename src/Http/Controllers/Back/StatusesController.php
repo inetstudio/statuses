@@ -26,12 +26,11 @@ class StatusesController extends Controller
     /**
      * Список статусов.
      *
-     * @param DataTables $dataTable
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(DataTables $dataTable): View
+    public function index(): View
     {
-        $table = $this->generateTable($dataTable, 'statuses', 'index');
+        $table = $this->generateTable('statuses', 'index');
 
         return view('admin.module.statuses::back.pages.index', compact('table'));
     }
