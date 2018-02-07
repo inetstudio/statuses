@@ -83,13 +83,15 @@
                                             'style' => 'width: 100%',
                                         ],
                                         'options' => [
-                                            null => '',
-                                            'default' => 'default',
-                                            'primary' => 'primary',
-                                            'success' => 'success',
-                                            'info' => 'info',
-                                            'warning' => 'warning',
-                                            'danger' => 'danger',
+                                            'values' => [
+                                                null => '',
+                                                'default' => 'default',
+                                                'primary' => 'primary',
+                                                'success' => 'success',
+                                                'info' => 'info',
+                                                'warning' => 'warning',
+                                                'danger' => 'danger',
+                                            ],
                                         ],
                                     ]) !!}
 

@@ -11,5 +11,7 @@
         'data-placeholder' => 'Выберите статус',
         'style' => 'width: 100%',
     ],
-    'options' => [null => ''] + \InetStudio\Statuses\Models\StatusModel::select('id', 'name')->pluck('name', 'id')->toArray(),
+    'options' => [
+        'values' => [null => ''] + \InetStudio\Statuses\Models\StatusModel::select('id', 'name')->pluck('name', 'id')->toArray(),
+    ],
 ]) !!}

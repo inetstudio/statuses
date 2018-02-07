@@ -1,6 +1,6 @@
 <?php
 
-namespace Inetstudio\Statuses\Transformers;
+namespace InetStudio\Statuses\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use InetStudio\Statuses\Models\StatusModel;
