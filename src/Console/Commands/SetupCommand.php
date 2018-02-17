@@ -6,8 +6,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
 /**
- * Class SetupCommand
- * @package InetStudio\Statuses\Console\Commands
+ * Class SetupCommand.
  */
 class SetupCommand extends Command
 {
@@ -72,6 +71,11 @@ class SetupCommand extends Command
         $this->calls = [
             [
                 'type' => 'artisan',
+                'description' => 'Setup Classifiers package',
+                'command' => 'inetstudio:classifiers:setup',
+            ],
+            [
+                'type' => 'artisan',
                 'description' => 'Publish migrations',
                 'command' => 'vendor:publish',
                 'params' => [
@@ -88,15 +92,6 @@ class SetupCommand extends Command
                 'type' => 'artisan',
                 'description' => 'Create draft status',
                 'command' => 'inetstudio:statuses:draft',
-            ],
-            [
-                'type' => 'artisan',
-                'description' => 'Publish config',
-                'command' => 'vendor:publish',
-                'params' => [
-                    '--provider' => 'InetStudio\Statuses\Providers\StatusesServiceProvider',
-                    '--tag' => 'config',
-                ],
             ],
             [
                 'type' => 'cli',

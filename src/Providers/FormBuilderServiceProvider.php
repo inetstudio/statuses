@@ -5,6 +5,9 @@ namespace InetStudio\Statuses\Providers;
 use Collective\Html\FormBuilder;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class FormBuilderServiceProvider.
+ */
 class FormBuilderServiceProvider extends ServiceProvider
 {
     /**

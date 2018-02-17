@@ -9,34 +9,26 @@
 @section('content')
 
     @push('breadcrumbs')
-        @include('admin.module.statuses::back.partials.breadcrumbs')
-        <li>
-            <a href="{{ route('back.statuses.index') }}">Статусы</a>
-        </li>
+        @include('admin.module.statuses::back.partials.breadcrumbs.form')
     @endpush
 
     <div class="row m-sm">
         <a class="btn btn-white" href="{{ route('back.statuses.index') }}">
             <i class="fa fa-arrow-left"></i> Вернуться назад
         </a>
-        @if ($item->id && $item->href)
-            <a class="btn btn-white" href="{{ $item->href }}" target="_blank">
-                <i class="fa fa-eye"></i> Посмотреть на сайте
-            </a>
-        @endif
     </div>
 
     <div class="wrapper wrapper-content">
 
         {!! Form::info() !!}
 
-        {!! Form::open(['url' => (!$item->id) ? route('back.statuses.store') : route('back.statuses.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
+        {!! Form::open(['url' => (! $item->id) ? route('back.statuses.store') : route('back.statuses.update', [$item->id]), 'id' => 'mainForm', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal']) !!}
 
             @if ($item->id)
                 {{ method_field('PUT') }}
             @endif
 
-            {!! Form::hidden('status_id', (!$item->id) ? '' : $item->id) !!}
+            {!! Form::hidden('status_id', (! $item->id) ? '' : $item->id) !!}
 
             <div class="row">
                 <div class="col-lg-12">
@@ -70,6 +62,16 @@
                                             'class' => 'tinymce-simple',
                                             'type' => 'simple',
                                             'id' => 'description',
+                                        ],
+                                    ]) !!}
+
+                                    {!! Form::classifiers('', $item, [
+                                        'label' => [
+                                            'title' => 'Тип статуса',
+                                        ],
+                                        'field' => [
+                                            'placeholder' => 'Выберите типы статуса',
+                                            'type' => 'Тип статуса',
                                         ],
                                     ]) !!}
 

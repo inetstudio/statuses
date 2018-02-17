@@ -1,13 +1,16 @@
 <?php
 
-Route::group(['namespace' => 'InetStudio\Statuses\Http\Controllers\Back'], function () {
-    Route::group(['middleware' => 'web', 'prefix' => 'back'], function () {
-        Route::group(['middleware' => 'back.auth'], function () {
-            Route::post('statuses/suggestions', 'StatusesController@getSuggestions')->name('back.statuses.getSuggestions');
-            Route::any('statuses/data', 'StatusesController@data')->name('back.statuses.data');
-            Route::resource('statuses', 'StatusesController', ['except' => [
-                'show',
-            ], 'as' => 'back']);
-        });
-    });
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract;
+
+Route::group([
+    'middleware' => ['web', 'back.auth'],
+    'prefix' => 'back',
+], function () {
+    Route::post('statuses/suggestions', StatusesUtilityControllerContract::class.'@getSuggestions')->name('back.statuses.getSuggestions');
+    Route::any('statuses/data', StatusesDataControllerContract::class.'@index')->name('back.statuses.data.index');
+    Route::resource('statuses', StatusesControllerContract::class, ['except' => [
+        'show',
+    ], 'as' => 'back']);
 });

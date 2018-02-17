@@ -4,8 +4,23 @@ namespace InetStudio\Statuses\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use InetStudio\Statuses\Console\Commands\SetupCommand;
+use InetStudio\Statuses\Transformers\Back\StatusTransformer;
+use InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest;
+use InetStudio\Statuses\Services\Back\StatusesDataTableService;
+use InetStudio\Statuses\Http\Controllers\Back\StatusesController;
 use InetStudio\Statuses\Console\Commands\CreateDraftStatusCommand;
+use InetStudio\Statuses\Http\Controllers\Back\StatusesDataController;
+use InetStudio\Statuses\Http\Controllers\Back\StatusesUtilityController;
+use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
+use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
+use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract;
 
+/**
+ * Class StatusesServiceProvider.
+ */
 class StatusesServiceProvider extends ServiceProvider
 {
     /**
@@ -28,6 +43,7 @@ class StatusesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->registerBindings();
     }
 
     /**
@@ -52,10 +68,6 @@ class StatusesServiceProvider extends ServiceProvider
      */
     protected function registerPublishes(): void
     {
-        $this->publishes([
-            __DIR__.'/../../config/statuses.php' => config_path('statuses.php'),
-        ], 'config');
-
         if ($this->app->runningInConsole()) {
             if (! class_exists('CreateStatusesTables')) {
                 $timestamp = date('Y_m_d_His', time());
@@ -84,5 +96,27 @@ class StatusesServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.statuses');
+    }
+
+    /**
+     * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
+     *
+     * @return void
+     */
+    protected function registerBindings(): void
+    {
+        // Controllers
+        $this->app->bind(StatusesControllerContract::class, StatusesController::class);
+        $this->app->bind(StatusesDataControllerContract::class, StatusesDataController::class);
+        $this->app->bind(StatusesUtilityControllerContract::class, StatusesUtilityController::class);
+
+        // Requests
+        $this->app->bind(SaveStatusRequestContract::class, SaveStatusRequest::class);
+
+        // Services
+        $this->app->bind(StatusesDataTableServiceContract::class, StatusesDataTableService::class);
+
+        // Transformers
+        $this->app->bind(StatusTransformerContract::class, StatusTransformer::class);
     }
 }

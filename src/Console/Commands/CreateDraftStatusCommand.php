@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class CreateDraftStatusCommand.
+ */
 class CreateDraftStatusCommand extends Command
 {
     /**

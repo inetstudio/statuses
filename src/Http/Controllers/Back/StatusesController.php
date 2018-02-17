@@ -3,51 +3,35 @@
 namespace InetStudio\Statuses\Http\Controllers\Back;
 
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
-use InetStudio\Statuses\Transformers\StatusTransformer;
-use InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest;
-use InetStudio\AdminPanel\Http\Controllers\Back\Traits\DatatablesTrait;
+use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
+use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
+use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
+use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
 
 /**
- * Контроллер для управления статусами.
- *
- * Class ContestByTagStatusesController
+ * Class StatusesController.
  */
-class StatusesController extends Controller
+class StatusesController extends Controller implements StatusesControllerContract
 {
-    use DatatablesTrait;
+    use ClassifiersManipulationsTrait;
 
     /**
      * Список статусов.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param StatusesDataTableServiceContract $datatablesService
+     *
+     * @return View
      */
-    public function index(): View
+    public function index(StatusesDataTableServiceContract $datatablesService): View
     {
-        $table = $this->generateTable('statuses', 'index');
+        $table = $datatablesService->html();
 
         return view('admin.module.statuses::back.pages.index', compact('table'));
-    }
-
-    /**
-     * Datatables serverside.
-     *
-     * @return mixed
-     */
-    public function data()
-    {
-        $items = StatusModel::query();
-
-        return DataTables::of($items)
-            ->setTransformer(new StatusTransformer)
-            ->rawColumns(['actions'])
-            ->make();
     }
 
     /**
@@ -65,10 +49,11 @@ class StatusesController extends Controller
     /**
      * Создание статуса.
      *
-     * @param SaveStatusRequest $request
+     * @param SaveStatusRequestContract $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveStatusRequest $request): RedirectResponse
+    public function store(SaveStatusRequestContract $request): RedirectResponse
     {
         return $this->save($request);
     }
@@ -77,6 +62,7 @@ class StatusesController extends Controller
      * Редактирование статуса.
      *
      * @param null $id
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit($id = null): View
@@ -93,11 +79,12 @@ class StatusesController extends Controller
     /**
      * Обновление статуса.
      *
-     * @param SaveStatusRequest $request
+     * @param SaveStatusRequestContract $request
      * @param null $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveStatusRequest $request, $id = null): RedirectResponse
+    public function update(SaveStatusRequestContract $request, $id = null): RedirectResponse
     {
         return $this->save($request, $id);
     }
@@ -105,11 +92,12 @@ class StatusesController extends Controller
     /**
      * Сохранение статуса.
      *
-     * @param SaveStatusRequest $request
+     * @param SaveStatusRequestContract $request
      * @param null $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    private function save($request, $id = null): RedirectResponse
+    private function save(SaveStatusRequestContract $request, $id = null): RedirectResponse
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
             $action = 'отредактирован';
@@ -124,6 +112,8 @@ class StatusesController extends Controller
         $item->color_class = strip_tags($request->get('color_class'));
         $item->save();
 
+        $this->saveClassifiers($item, $request);
+
         Session::flash('success', 'Статус «'.$item->name.'» успешно '.$action);
 
         return response()->redirectToRoute('back.statuses.edit', [
@@ -135,6 +125,7 @@ class StatusesController extends Controller
      * Удаление статуса.
      *
      * @param null $id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id = null): JsonResponse
@@ -150,21 +141,5 @@ class StatusesController extends Controller
                 'success' => false,
             ]);
         }
-    }
-
-    /**
-     * Возвращаем статусы для поля.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getSuggestions(Request $request): JsonResponse
-    {
-        $search = $request->get('q');
-        $data = [];
-
-        $data['items'] = StatusModel::select(['id', 'name'])->where('name', 'LIKE', '%'.$search.'%')->get()->toArray();
-
-        return response()->json($data);
     }
 }

@@ -4,8 +4,12 @@ namespace InetStudio\Statuses\Http\Requests\Back;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
 
-class SaveStatusRequest extends FormRequest
+/**
+ * Class SaveStatusRequest.
+ */
+class SaveStatusRequest extends FormRequest implements SaveStatusRequestContract
 {
     /**
      * Определить, авторизован ли пользователь для этого запроса.

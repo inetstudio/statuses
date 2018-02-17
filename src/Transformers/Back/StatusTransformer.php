@@ -1,17 +1,24 @@
 <?php
 
-namespace InetStudio\Statuses\Transformers;
+namespace InetStudio\Statuses\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
 use InetStudio\Statuses\Models\StatusModel;
+use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
 
-class StatusTransformer extends TransformerAbstract
+/**
+ * Class StatusTransformer.
+ */
+class StatusTransformer extends TransformerAbstract implements StatusTransformerContract
 {
     /**
      * Подготовка данных для отображения в таблице.
      *
      * @param StatusModel $status
+     *
      * @return array
+     *
+     * @throws \Throwable
      */
     public function transform(StatusModel $status): array
     {
