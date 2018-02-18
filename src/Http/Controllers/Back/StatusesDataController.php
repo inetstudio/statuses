@@ -14,12 +14,12 @@ class StatusesDataController extends Controller implements StatusesDataControlle
     /**
      * Получаем данные для отображения в таблице.
      *
-     * @param StatusesDataTableServiceContract $datatablesService
+     * @param StatusesDataTableServiceContract $dataTableService
      *
      * @return mixed
      */
-    public function index(StatusesDataTableServiceContract $datatablesService)
+    public function index(StatusesDataTableServiceContract $dataTableService)
     {
-        return $datatablesService->ajax();
+        return $dataTableService->ajax();
     }
 }

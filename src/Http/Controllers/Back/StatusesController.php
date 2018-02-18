@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use InetStudio\Statuses\Models\StatusModel;
+use InetStudio\Statuses\Contracts\Events\ModifyStatusEventContract;
 use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
 use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
 use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
@@ -23,13 +24,13 @@ class StatusesController extends Controller implements StatusesControllerContrac
     /**
      * Список статусов.
      *
-     * @param StatusesDataTableServiceContract $datatablesService
+     * @param StatusesDataTableServiceContract $dataTableService
      *
      * @return View
      */
-    public function index(StatusesDataTableServiceContract $datatablesService): View
+    public function index(StatusesDataTableServiceContract $dataTableService): View
     {
-        $table = $datatablesService->html();
+        $table = $dataTableService->html();
 
         return view('admin.module.statuses::back.pages.index', compact('table'));
     }
@@ -114,6 +115,8 @@ class StatusesController extends Controller implements StatusesControllerContrac
 
         $this->saveClassifiers($item, $request);
 
+        event(app()->makeWith(ModifyStatusEventContract::class, ['object' => $item]));
+
         Session::flash('success', 'Статус «'.$item->name.'» успешно '.$action);
 
         return response()->redirectToRoute('back.statuses.edit', [
@@ -132,6 +135,8 @@ class StatusesController extends Controller implements StatusesControllerContrac
     {
         if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
             $item->delete();
+
+            event(app()->makeWith(ModifyStatusEventContract::class, ['object' => $item]));
 
             return response()->json([
                 'success' => true,

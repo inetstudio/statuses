@@ -3,12 +3,14 @@
 namespace InetStudio\Statuses\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use InetStudio\Statuses\Events\ModifyStatusEvent;
 use InetStudio\Statuses\Console\Commands\SetupCommand;
 use InetStudio\Statuses\Transformers\Back\StatusTransformer;
 use InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest;
 use InetStudio\Statuses\Services\Back\StatusesDataTableService;
 use InetStudio\Statuses\Http\Controllers\Back\StatusesController;
 use InetStudio\Statuses\Console\Commands\CreateDraftStatusCommand;
+use InetStudio\Statuses\Contracts\Events\ModifyStatusEventContract;
 use InetStudio\Statuses\Http\Controllers\Back\StatusesDataController;
 use InetStudio\Statuses\Http\Controllers\Back\StatusesUtilityController;
 use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
@@ -109,6 +111,9 @@ class StatusesServiceProvider extends ServiceProvider
         $this->app->bind(StatusesControllerContract::class, StatusesController::class);
         $this->app->bind(StatusesDataControllerContract::class, StatusesDataController::class);
         $this->app->bind(StatusesUtilityControllerContract::class, StatusesUtilityController::class);
+
+        // Events
+        $this->app->bind(ModifyStatusEventContract::class, ModifyStatusEvent::class);
 
         // Requests
         $this->app->bind(SaveStatusRequestContract::class, SaveStatusRequest::class);
