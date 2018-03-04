@@ -7,5 +7,4 @@ namespace InetStudio\Statuses\Contracts\Transformers\Back;
  */
 interface StatusTransformerContract
 {
-
 }

@@ -12,8 +12,6 @@ use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerCo
 class StatusesDataController extends Controller implements StatusesDataControllerContract
 {
     /**
-
-     *
      * @param StatusesDataTableServiceContract $dataTableService
      *
      * @return mixed

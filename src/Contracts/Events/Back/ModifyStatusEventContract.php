@@ -8,4 +8,3 @@ namespace InetStudio\Statuses\Contracts\Events\Back;
 interface ModifyStatusEventContract
 {
 }
-

@@ -16,7 +16,7 @@ class ModifyStatusEvent implements ModifyStatusEventContract
 
     /**
      * ModifyStatusEvent constructor.
-     * 
+     *
      * @param $object
      */
     public function __construct($object)
