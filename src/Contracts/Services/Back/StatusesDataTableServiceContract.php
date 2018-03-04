@@ -7,5 +7,4 @@ namespace InetStudio\Statuses\Contracts\Services\Back;
  */
 interface StatusesDataTableServiceContract
 {
-
 }

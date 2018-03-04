@@ -4,8 +4,8 @@ namespace InetStudio\Statuses\Http\Controllers\Back;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use InetStudio\Statuses\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract;
 use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract;
 
 /**
  * Class StatusesUtilityController.

@@ -3,8 +3,8 @@
 namespace InetStudio\Statuses\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Statuses\Contracts\Models\StatusModelContract;
 use League\Fractal\Resource\Collection as FractalCollection;
+use InetStudio\Statuses\Contracts\Models\StatusModelContract;
 use InetStudio\Statuses\Contracts\Transformers\Back\SuggestionTransformerContract;
 
 /**

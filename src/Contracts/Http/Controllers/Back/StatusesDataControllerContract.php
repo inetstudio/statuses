@@ -7,5 +7,4 @@ namespace InetStudio\Statuses\Contracts\Http\Controllers\Back;
  */
 interface StatusesDataControllerContract
 {
-
 }
