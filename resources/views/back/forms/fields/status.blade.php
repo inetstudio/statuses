@@ -1,3 +1,5 @@
+@inject('statusesService', 'InetStudio\Statuses\Contracts\Services\Back\StatusesServiceContract')
+
 @php
     $item = $value;
 @endphp
@@ -12,6 +14,6 @@
         'style' => 'width: 100%',
     ],
     'options' => [
-        'values' => [null => ''] + \InetStudio\Statuses\Models\StatusModel::select('id', 'name')->pluck('name', 'id')->toArray(),
+        'values' => [null => ''] + $statusesService->getAllStatuses(true)->pluck('name', 'id')->toArray(),
     ],
 ]) !!}

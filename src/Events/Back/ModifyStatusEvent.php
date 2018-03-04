@@ -1,10 +1,13 @@
 <?php
 
-namespace InetStudio\Statuses\Events;
+namespace InetStudio\Statuses\Events\Back;
 
 use Illuminate\Queue\SerializesModels;
-use InetStudio\Statuses\Contracts\Events\ModifyStatusEventContract;
+use InetStudio\Statuses\Contracts\Events\Back\ModifyStatusEventContract;
 
+/**
+ * Class ModifyStatusEvent.
+ */
 class ModifyStatusEvent implements ModifyStatusEventContract
 {
     use SerializesModels;
@@ -13,6 +16,7 @@ class ModifyStatusEvent implements ModifyStatusEventContract
 
     /**
      * ModifyStatusEvent constructor.
+     * 
      * @param $object
      */
     public function __construct($object)

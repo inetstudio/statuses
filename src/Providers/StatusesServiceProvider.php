@@ -3,22 +3,6 @@
 namespace InetStudio\Statuses\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use InetStudio\Statuses\Events\ModifyStatusEvent;
-use InetStudio\Statuses\Console\Commands\SetupCommand;
-use InetStudio\Statuses\Transformers\Back\StatusTransformer;
-use InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest;
-use InetStudio\Statuses\Services\Back\StatusesDataTableService;
-use InetStudio\Statuses\Http\Controllers\Back\StatusesController;
-use InetStudio\Statuses\Console\Commands\CreateDraftStatusCommand;
-use InetStudio\Statuses\Contracts\Events\ModifyStatusEventContract;
-use InetStudio\Statuses\Http\Controllers\Back\StatusesDataController;
-use InetStudio\Statuses\Http\Controllers\Back\StatusesUtilityController;
-use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
-use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
-use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
-use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
-use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerContract;
-use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract;
 
 /**
  * Class StatusesServiceProvider.
@@ -36,6 +20,7 @@ class StatusesServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
+        $this->registerObservers();
     }
 
     /**
@@ -57,8 +42,8 @@ class StatusesServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                SetupCommand::class,
-                CreateDraftStatusCommand::class,
+                'InetStudio\Statuses\Console\Commands\SetupCommand',
+                'InetStudio\Statuses\Console\Commands\CreateDraftStatusCommand',
             ]);
         }
     }
@@ -101,6 +86,16 @@ class StatusesServiceProvider extends ServiceProvider
     }
 
     /**
+     * Регистрация наблюдателей.
+     *
+     * @return void
+     */
+    public function registerObservers(): void
+    {
+        $this->app->make('InetStudio\Statuses\Contracts\Models\StatusModelContract')::observe($this->app->make('InetStudio\Statuses\Contracts\Observers\StatusObserverContract'));
+    }
+
+    /**
      * Регистрация привязок, алиасов и сторонних провайдеров сервисов.
      *
      * @return void
@@ -108,20 +103,39 @@ class StatusesServiceProvider extends ServiceProvider
     protected function registerBindings(): void
     {
         // Controllers
-        $this->app->bind(StatusesControllerContract::class, StatusesController::class);
-        $this->app->bind(StatusesDataControllerContract::class, StatusesDataController::class);
-        $this->app->bind(StatusesUtilityControllerContract::class, StatusesUtilityController::class);
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract', 'InetStudio\Statuses\Http\Controllers\Back\StatusesController');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerContract', 'InetStudio\Statuses\Http\Controllers\Back\StatusesDataController');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract', 'InetStudio\Statuses\Http\Controllers\Back\StatusesUtilityController');
 
         // Events
-        $this->app->bind(ModifyStatusEventContract::class, ModifyStatusEvent::class);
+        $this->app->bind('InetStudio\Statuses\Contracts\Events\Back\ModifyStatusEventContract', 'InetStudio\Statuses\Events\Back\ModifyStatusEvent');
+
+        // Models
+        $this->app->bind('InetStudio\Statuses\Contracts\Models\StatusModelContract', 'InetStudio\Statuses\Models\StatusModel');
+
+        // Observers
+        $this->app->bind('InetStudio\Statuses\Contracts\Observers\StatusObserverContract', 'InetStudio\Statuses\Observers\StatusObserver');
+
+        // Repositories
+        $this->app->bind('InetStudio\Statuses\Contracts\Repositories\StatusesRepositoryContract', 'InetStudio\Statuses\Repositories\StatusesRepository');
 
         // Requests
-        $this->app->bind(SaveStatusRequestContract::class, SaveStatusRequest::class);
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract', 'InetStudio\Statuses\Http\Requests\Back\SaveStatusRequest');
+
+        // Responses
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\DestroyResponseContract', 'InetStudio\Statuses\Http\Responses\Back\Statuses\DestroyResponse');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\FormResponseContract', 'InetStudio\Statuses\Http\Responses\Back\Statuses\FormResponse');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\IndexResponseContract', 'InetStudio\Statuses\Http\Responses\Back\Statuses\IndexResponse');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\SaveResponseContract', 'InetStudio\Statuses\Http\Responses\Back\Statuses\SaveResponse');
+        $this->app->bind('InetStudio\Statuses\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', 'InetStudio\Statuses\Http\Responses\Back\Utility\SuggestionsResponse');
 
         // Services
-        $this->app->bind(StatusesDataTableServiceContract::class, StatusesDataTableService::class);
+        $this->app->bind('InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract', 'InetStudio\Statuses\Services\Back\StatusesDataTableService');
+        $this->app->bind('InetStudio\Statuses\Contracts\Services\Back\StatusesObserverServiceContract', 'InetStudio\Statuses\Services\Back\StatusesObserverService');
+        $this->app->bind('InetStudio\Statuses\Contracts\Services\Back\StatusesServiceContract', 'InetStudio\Statuses\Services\Back\StatusesService');
 
         // Transformers
-        $this->app->bind(StatusTransformerContract::class, StatusTransformer::class);
+        $this->app->bind('InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract', 'InetStudio\Statuses\Transformers\Back\StatusTransformer');
+        $this->app->bind('InetStudio\Statuses\Contracts\Transformers\Back\SuggestionTransformerContract', 'InetStudio\Statuses\Transformers\Back\SuggestionTransformer');
     }
 }

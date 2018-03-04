@@ -3,7 +3,7 @@
 namespace InetStudio\Statuses\Transformers\Back;
 
 use League\Fractal\TransformerAbstract;
-use InetStudio\Statuses\Models\StatusModel;
+use InetStudio\Statuses\Contracts\Models\StatusModelContract;
 use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
 
 /**
@@ -14,21 +14,21 @@ class StatusTransformer extends TransformerAbstract implements StatusTransformer
     /**
      * Подготовка данных для отображения в таблице.
      *
-     * @param StatusModel $status
+     * @param StatusModelContract $item
      *
      * @return array
      *
      * @throws \Throwable
      */
-    public function transform(StatusModel $status): array
+    public function transform(StatusModelContract $item): array
     {
         return [
-            'id' => (int) $status->id,
-            'name' => $status->name,
-            'created_at' => (string) $status->created_at,
-            'updated_at' => (string) $status->updated_at,
+            'id' => (int) $item->id,
+            'name' => $item->name,
+            'created_at' => (string) $item->created_at,
+            'updated_at' => (string) $item->updated_at,
             'actions' => view('admin.module.statuses::back.partials.datatables.actions', [
-                'id' => $status->id,
+                'id' => $item->id,
             ])->render(),
         ];
     }

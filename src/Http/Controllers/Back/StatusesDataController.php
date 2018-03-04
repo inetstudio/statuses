@@ -12,7 +12,7 @@ use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesDataControllerCo
 class StatusesDataController extends Controller implements StatusesDataControllerContract
 {
     /**
-     * Получаем данные для отображения в таблице.
+
      *
      * @param StatusesDataTableServiceContract $dataTableService
      *

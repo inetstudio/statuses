@@ -2,149 +2,134 @@
 
 namespace InetStudio\Statuses\Http\Controllers\Back;
 
-use Illuminate\View\View;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Session;
-use InetStudio\Statuses\Models\StatusModel;
-use InetStudio\Statuses\Contracts\Events\ModifyStatusEventContract;
 use InetStudio\Statuses\Contracts\Http\Requests\Back\SaveStatusRequestContract;
-use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
 use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesControllerContract;
-use InetStudio\Classifiers\Http\Controllers\Back\Traits\ClassifiersManipulationsTrait;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\FormResponseContract;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\SaveResponseContract;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\IndexResponseContract;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\DestroyResponseContract;
 
 /**
  * Class StatusesController.
  */
 class StatusesController extends Controller implements StatusesControllerContract
 {
-    use ClassifiersManipulationsTrait;
+    /**
+     * Используемые сервисы.
+     *
+     * @var array
+     */
+    private $services;
 
     /**
-     * Список статусов.
-     *
-     * @param StatusesDataTableServiceContract $dataTableService
-     *
-     * @return View
+     * StatusesController constructor.
      */
-    public function index(StatusesDataTableServiceContract $dataTableService): View
+    public function __construct()
     {
-        $table = $dataTableService->html();
-
-        return view('admin.module.statuses::back.pages.index', compact('table'));
+        $this->services['statuses'] = app()->make('InetStudio\Statuses\Contracts\Services\Back\StatusesServiceContract');
+        $this->services['dataTables'] = app()->make('InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract');
     }
 
     /**
-     * Добавление статуса.
+     * Список объектов.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return IndexResponseContract
      */
-    public function create(): View
+    public function index(): IndexResponseContract
     {
-        return view('admin.module.statuses::back.pages.form', [
-            'item' => new StatusModel(),
+        $table = $this->services['dataTables']->html();
+
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\IndexResponseContract', [
+            'data' => compact('table'),
         ]);
     }
 
     /**
-     * Создание статуса.
+     * Добавление объекта.
+     *
+     * @return FormResponseContract
+     */
+    public function create(): FormResponseContract
+    {
+        $item = $this->services['statuses']->getStatusObject();
+
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\FormResponseContract', [
+            'data' => compact('item'),
+        ]);
+    }
+
+    /**
+     * Создание объекта.
      *
      * @param SaveStatusRequestContract $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    public function store(SaveStatusRequestContract $request): RedirectResponse
+    public function store(SaveStatusRequestContract $request): SaveResponseContract
     {
         return $this->save($request);
     }
 
     /**
-     * Редактирование статуса.
+     * Редактирование объекта.
      *
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return FormResponseContract
      */
-    public function edit($id = null): View
+    public function edit($id = 0): FormResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
-            return view('admin.module.statuses::back.pages.form', [
-                'item' => $item,
-            ]);
-        } else {
-            abort(404);
-        }
+        $item = $this->services['statuses']->getStatusObject($id);
+
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\FormResponseContract', [
+            'data' => compact('item'),
+        ]);
     }
 
     /**
-     * Обновление статуса.
+     * Обновление объекта.
      *
      * @param SaveStatusRequestContract $request
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    public function update(SaveStatusRequestContract $request, $id = null): RedirectResponse
+    public function update(SaveStatusRequestContract $request, int $id = 0): SaveResponseContract
     {
         return $this->save($request, $id);
     }
 
     /**
-     * Сохранение статуса.
+     * Сохранение объекта.
      *
      * @param SaveStatusRequestContract $request
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return SaveResponseContract
      */
-    private function save(SaveStatusRequestContract $request, $id = null): RedirectResponse
+    private function save(SaveStatusRequestContract $request, int $id = 0): SaveResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
-            $action = 'отредактирован';
-        } else {
-            $action = 'создан';
-            $item = new StatusModel();
-        }
+        $item = $this->services['statuses']->save($request, $id);
 
-        $item->name = strip_tags($request->get('name'));
-        $item->alias = strip_tags($request->get('alias'));
-        $item->description = strip_tags($request->input('description.text'));
-        $item->color_class = strip_tags($request->get('color_class'));
-        $item->save();
-
-        $this->saveClassifiers($item, $request);
-
-        event(app()->makeWith(ModifyStatusEventContract::class, ['object' => $item]));
-
-        Session::flash('success', 'Статус «'.$item->name.'» успешно '.$action);
-
-        return response()->redirectToRoute('back.statuses.edit', [
-            $item->fresh()->id
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\SaveResponseContract', [
+            'item' => $item,
         ]);
     }
 
     /**
-     * Удаление статуса.
+     * Удаление объекта.
      *
-     * @param null $id
+     * @param int $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return DestroyResponseContract
      */
-    public function destroy($id = null): JsonResponse
+    public function destroy(int $id = 0): DestroyResponseContract
     {
-        if (! is_null($id) && $id > 0 && $item = StatusModel::find($id)) {
-            $item->delete();
+        $result = $this->services['statuses']->destroy($id);
 
-            event(app()->makeWith(ModifyStatusEventContract::class, ['object' => $item]));
-
-            return response()->json([
-                'success' => true,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-            ]);
-        }
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Statuses\DestroyResponseContract', [
+            'result' => ($result === null) ? false : $result,
+        ]);
     }
 }

@@ -3,9 +3,8 @@
 namespace InetStudio\Statuses\Http\Controllers\Back;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
-use InetStudio\Statuses\Models\StatusModel;
+use InetStudio\Statuses\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract;
 use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControllerContract;
 
 /**
@@ -14,19 +13,22 @@ use InetStudio\Statuses\Contracts\Http\Controllers\Back\StatusesUtilityControlle
 class StatusesUtilityController extends Controller implements StatusesUtilityControllerContract
 {
     /**
-     * Возвращаем статусы для поля.
+     * Возвращаем объекты для поля.
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return SuggestionsResponseContract
      */
-    public function getSuggestions(Request $request): JsonResponse
+    public function getSuggestions(Request $request): SuggestionsResponseContract
     {
         $search = $request->get('q');
-        $data = [];
+        $type = $request->get('type');
 
-        $data['items'] = StatusModel::select(['id', 'name'])->where('name', 'LIKE', '%'.$search.'%')->get()->toArray();
+        $data = app()->make('InetStudio\Statuses\Contracts\Services\Back\StatusesServiceContract')
+            ->getSuggestions($search, $type);
 
-        return response()->json($data);
+        return app()->makeWith('InetStudio\Statuses\Contracts\Http\Responses\Back\Utility\SuggestionsResponseContract', [
+            'suggestions' => $data,
+        ]);
     }
 }

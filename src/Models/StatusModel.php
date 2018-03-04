@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
+use InetStudio\Statuses\Contracts\Models\StatusModelContract;
 
-class StatusModel extends Model
+class StatusModel extends Model implements StatusModelContract
 {
     use Searchable;
     use SoftDeletes;

@@ -5,8 +5,7 @@ namespace InetStudio\Statuses\Services\Back;
 use Yajra\DataTables\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Yajra\DataTables\Services\DataTable;
-use InetStudio\Statuses\Models\StatusModel;
-use InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract;
+use InetStudio\Statuses\Contracts\Repositories\StatusesRepositoryContract;
 use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract;
 
 /**
@@ -14,6 +13,21 @@ use InetStudio\Statuses\Contracts\Services\Back\StatusesDataTableServiceContract
  */
 class StatusesDataTableService extends DataTable implements StatusesDataTableServiceContract
 {
+    /**
+     * @var StatusesRepositoryContract
+     */
+    private $repository;
+
+    /**
+     * TagsDataTableService constructor.
+     *
+     * @param StatusesRepositoryContract $repository
+     */
+    public function __construct(StatusesRepositoryContract $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * Запрос на получение данных таблицы.
      *
@@ -23,7 +37,7 @@ class StatusesDataTableService extends DataTable implements StatusesDataTableSer
      */
     public function ajax()
     {
-        $transformer = app()->make(StatusTransformerContract::class);
+        $transformer = app()->make('InetStudio\Statuses\Contracts\Transformers\Back\StatusTransformerContract');
 
         return DataTables::of($this->query())
             ->setTransformer($transformer)
@@ -38,7 +52,7 @@ class StatusesDataTableService extends DataTable implements StatusesDataTableSer
      */
     public function query()
     {
-        $query = StatusModel::query();
+        $query = $this->repository->getAllItems(true);
 
         return $query;
     }
