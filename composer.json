@@ -21,8 +21,9 @@
     "extra": {
       "laravel": {
         "providers": [
-          "InetStudio\\Statuses\\Providers\\StatusesServiceProvider",
-          "InetStudio\\Statuses\\Providers\\FormBuilderServiceProvider"
+          "InetStudio\\Statuses\\Providers\\FormBuilderServiceProvider",
+          "InetStudio\\Statuses\\Providers\\StatusesBindingsServiceProvider",
+          "InetStudio\\Statuses\\Providers\\StatusesServiceProvider"
         ]
       }
     }
