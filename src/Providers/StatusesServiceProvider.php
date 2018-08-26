@@ -2,6 +2,7 @@
 
 namespace InetStudio\Statuses\Providers;
 
+use Collective\Html\FormBuilder;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -20,6 +21,7 @@ class StatusesServiceProvider extends ServiceProvider
         $this->registerPublishes();
         $this->registerRoutes();
         $this->registerViews();
+        $this->registerFormComponents();
     }
 
     /**
@@ -72,5 +74,15 @@ class StatusesServiceProvider extends ServiceProvider
     protected function registerViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', 'admin.module.statuses');
+    }
+
+    /**
+     * Регистрация компонентов форм.
+     *
+     * @return void
+     */
+    protected function registerFormComponents()
+    {
+        FormBuilder::component('status', 'admin.module.statuses::back.forms.fields.status', ['name' => null, 'value' => null, 'attributes' => null]);
     }
 }
