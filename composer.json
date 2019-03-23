@@ -10,7 +10,7 @@
       }
     ],
     "require": {
-      "inetstudio/classifiers": "1.7.*"
+      "inetstudio/classifiers": "1.8.*"
     },
     "autoload": {
       "psr-4": {

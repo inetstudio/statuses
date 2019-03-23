@@ -2,19 +2,20 @@
 
 namespace InetStudio\Statuses\Models;
 
+use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Venturecraft\Revisionable\RevisionableTrait;
 use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\Statuses\Contracts\Models\StatusModelContract;
 
-class StatusModel extends Model implements StatusModelContract
+class StatusModel extends Model implements StatusModelContract, Auditable
 {
     use Searchable;
     use SoftDeletes;
     use HasClassifiers;
-    use RevisionableTrait;
+    use \OwenIt\Auditing\Auditable;
 
     /**
      * Связанная с моделью таблица.
@@ -43,7 +44,12 @@ class StatusModel extends Model implements StatusModelContract
         'deleted_at',
     ];
 
-    protected $revisionCreationsEnabled = true;
+    /**
+     * Should the timestamps be audited?
+     *
+     * @var bool
+     */
+    protected $auditTimestamps = true;
 
     /**
      * Настройка полей для поиска.
@@ -52,7 +58,7 @@ class StatusModel extends Model implements StatusModelContract
      */
     public function toSearchableArray()
     {
-        $arr = array_only($this->toArray(), ['id', 'name', 'alias', 'description']);
+        $arr = Arr::only($this->toArray(), ['id', 'name', 'alias', 'description']);
 
         return $arr;
     }
