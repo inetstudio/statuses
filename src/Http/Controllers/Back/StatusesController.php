@@ -46,7 +46,7 @@ class StatusesController extends Controller implements StatusesControllerContrac
     }
 
     /**
-     * Добавление объекта.
+     * Создание объекта.
      *
      * @return FormResponseContract
      */
