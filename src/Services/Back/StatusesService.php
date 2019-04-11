@@ -80,7 +80,7 @@ class StatusesService implements StatusesServiceContract
         $action = ($id) ? 'отредактирован' : 'создан';
         $item = $this->repository->save($request, $id);
 
-        app()->make('InetStudio\Classifiers\Entries\Contracts\Services\Back\EntriesServiceContract')
+        app()->make('InetStudio\Classifiers\Entries\Contracts\Services\Back\ItemsServiceContract')
             ->attachToObject($request, $item);
 
         $item->searchable();
