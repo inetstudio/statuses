@@ -6,10 +6,10 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use InetStudio\StatusesPackage\Statuses\Contracts\Services\Back\ItemsServiceContract;
 use InetStudio\StatusesPackage\Statuses\Contracts\Services\Back\DataTableServiceContract;
 use InetStudio\StatusesPackage\Statuses\Contracts\Http\Requests\Back\SaveItemRequestContract;
-use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\DestroyResponseContract;
 use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\FormResponseContract;
-use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\IndexResponseContract;
 use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\SaveResponseContract;
+use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\IndexResponseContract;
+use InetStudio\StatusesPackage\Statuses\Contracts\Http\Responses\Back\Resource\DestroyResponseContract;
 
 /**
  * Interface ResourceControllerContract.
