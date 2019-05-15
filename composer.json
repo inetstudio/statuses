@@ -1,28 +1,31 @@
 {
-    "name": "inetstudio/statuses",
-    "description": "Package for statuses",
-    "homepage": "https://github.com/inetstudio/statuses",
-    "license": "MIT",
-    "authors": [
-      {
-        "name": "Konstantin Bukin",
-        "email": "bukin@inetstudio.ru"
-      }
-    ],
-    "require": {
-      "inetstudio/classifiers": "1.8.*"
-    },
-    "autoload": {
-      "psr-4": {
-        "InetStudio\\Statuses\\": "src/"
-      }
-    },
-    "extra": {
-      "laravel": {
-        "providers": [
-          "InetStudio\\Statuses\\Providers\\StatusesBindingsServiceProvider",
-          "InetStudio\\Statuses\\Providers\\StatusesServiceProvider"
-        ]
-      }
+  "name": "inetstudio/statuses",
+  "description": "Package for statuses",
+  "homepage": "https://github.com/inetstudio/statuses",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Konstantin Bukin",
+      "email": "bukin@inetstudio.ru"
     }
+  ],
+  "require": {
+    "inetstudio/admin-panel": "1.8.*",
+    "inetstudio/classifiers": "1.8.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "InetStudio\\StatusesPackage\\": "package/src",
+      "InetStudio\\StatusesPackage\\Statuses\\": "entities/statuses/src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "InetStudio\\StatusesPackage\\Providers\\ServiceProvider",
+        "InetStudio\\StatusesPackage\\Statuses\\Providers\\BindingsServiceProvider",
+        "InetStudio\\StatusesPackage\\Statuses\\Providers\\ServiceProvider"
+      ]
+    }
+  }
 }
