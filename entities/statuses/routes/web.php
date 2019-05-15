@@ -21,7 +21,7 @@ Route::group(
                 'except' => [
                     'show',
                 ],
-                'as' => 'back'
+                'as' => 'back',
             ]
         );
     }
