@@ -11,6 +11,9 @@ use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\StatusesPackage\Statuses\Contracts\Models\StatusModelContract;
 
+/**
+ * Class StatusModel.
+ */
 class StatusModel extends Model implements StatusModelContract
 {
     use Auditable;
